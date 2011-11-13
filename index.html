@@ -129,7 +129,7 @@ var next_kitten = {
 
 function word_count(text, wc) {
   if (typeof localStorage != "undefined") localStorage.text = text;
-  if (current_word_count >= 10 && warning_shown == false) {
+  if (current_word_count >= 10 && warning_shown == false && typeof localStorage == "undefined") {
     show_warning();
   }
   text = text.replace(/^\s*|\s*$/g,''); //removes whitespace from front and end
@@ -145,7 +145,7 @@ function word_count(text, wc) {
 }
 
 function show_warning() {
-  if (typeof localStorage == "undefined") $("#warning").fadeIn("slow");
+ $("#warning").fadeIn("slow");
 }
 
 function hide_warning(immediate) {
