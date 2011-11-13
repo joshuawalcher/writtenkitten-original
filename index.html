@@ -128,6 +128,7 @@ var next_kitten = {
 };
 
 function word_count(text, wc) {
+  if (typeof localStorage != "undefined") localStorage.text = text;
   if (current_word_count >= 10 && warning_shown == false) {
     show_warning();
   }
@@ -144,7 +145,7 @@ function word_count(text, wc) {
 }
 
 function show_warning() {
-  $("#warning").fadeIn("slow");
+  if (typeof localStorage == "undefined") $("#warning").fadeIn("slow");
 }
 
 function hide_warning(immediate) {
@@ -207,9 +208,13 @@ function getParameterByName(name) {
   else
     return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
+function restore_text() {
+  if (typeof localStorage != "undefined") $("#writearea").attr("value", localStorage.text);
+}
 </script>
 </head>
-<body onLoad="fetch_next_kitten()">
+<body onLoad="fetch_next_kitten(); restore_text()">
 <div class="wrapper">
 <a name="top"></a>
 <h1>Written? <span id="titleKitten">Kitten!</span><span id="titleSearch"></span></h1>
@@ -217,6 +222,8 @@ function getParameterByName(name) {
 	<div id="warning" style="display:none">
 		<h2>Warning!</h2>
 		<p>We don't save your work for you! You'll need to regularly copy and paste your text into a word processor or other application to save it permanently.</p>
+    <p>If you want your work saved, get a modern browser like <a href="https://www.google.com/chrome/">Chrome</a>, <a href="http://www.apple.com/safari/">Safari</a>,
+      <a href="http://www.mozilla.org/firefox/">Firefox</a> or <a href="http://www.opera.com/">Opera</a>.</p>
 		<p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
 	</div>
 	<div id="kittenCredit"></div>
