@@ -210,7 +210,7 @@ function getParameterByName(name) {
 }
 
 function restore_text() {
-  if (typeof localStorage != "undefined") $("#writearea").attr("value", localStorage.text);
+  if (typeof localStorage != "undefined") $("#writearea").attr("value", localStorage.text).keyup();
 }
 </script>
 </head>
@@ -252,8 +252,8 @@ function restore_text() {
 
 <div id="about" style="display:none">
 	<h2>About</h2>
-	<p>
-Written Kitten was created by <a href="http://twitter.com/Skud" rel="author">Skud</a> and <a href="http://twitter.com/aquaprofundanet" rel="author">Emily</a>.
+  <p>
+Written Kitten was created by <a href="http://twitter.com/Skud" rel="author">Skud</a>, <a href="http://twitter.com/aquaprofundanet" rel="author">Emily</a> and <a href="https://github.com/Skud/writtenkitten/contributors" rel="author">contributors</a>.
 We like positive reinforcement, so we decided to make something a bit like <a href="http://writeordie.com">writeordie</a> but
 cuter and fuzzier.
 
