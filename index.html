@@ -67,7 +67,7 @@ h1, .controls, h2, .hide {
   font-size: 1.2em;
   cursor: pointer;
 }
-#warning {
+.warning {
   background-color: #f7f8c3;
   border: 1px solid #f7ce6d;
   padding: 1em 1em 0 1em;
@@ -75,8 +75,8 @@ h1, .controls, h2, .hide {
   -moz-border-radius: 5px;
   border-radius: 5px;
 }
-#warning h2 {  font-size: 2em }
-#warning a {
+.warning h2 {  font-size: 2em }
+.warning a {
   font-size: 1.5em;
   color: #000;
   cursor: pointer;
@@ -85,7 +85,7 @@ h1, .controls, h2, .hide {
   text-align: right;
   padding-right: 1em;
 }
-#displayWords, #about, #kittenCredit, #warning {
+#displayWords, #about, #kittenCredit, .warning {
   font-family: "Helvetica Neue", sans-serif;
   font-weight: 200;
 }
@@ -120,6 +120,9 @@ var words_for_reward = 100;
 var kittens_earned = 0;
 var kittens_shown = 0;
 var warning_shown = false;
+var warning;
+if (typeof localStorage == "undefined") warning = "#warning-no-ls"
+else warning = "#warning-ls";
 
 var next_kitten = {
   img_url: '',
@@ -129,7 +132,7 @@ var next_kitten = {
 
 function word_count(text, wc) {
   if (typeof localStorage != "undefined") localStorage.text = text;
-  if (current_word_count >= 10 && warning_shown == false && typeof localStorage == "undefined") {
+  if (current_word_count >= 10 && warning_shown == false) {
     show_warning();
   }
   text = text.replace(/^\s*|\s*$/g,''); //removes whitespace from front and end
@@ -145,14 +148,14 @@ function word_count(text, wc) {
 }
 
 function show_warning() {
- $("#warning").fadeIn("slow");
+  $(warning).fadeIn("slow");
 }
 
 function hide_warning(immediate) {
   if (immediate == true) {
-    $("#warning").hide();
+    $(warning).hide();
   } else {
-    $("#warning").fadeOut("slow");
+    $(warning).fadeOut("slow");
   }
   warning_shown = true;
 }
@@ -219,11 +222,16 @@ function restore_text() {
 <a name="top"></a>
 <h1>Written? <span id="titleKitten">Kitten!</span><span id="titleSearch"></span></h1>
 <div id="kittenFrame">
-	<div id="warning" style="display:none">
+	<div id="warning-no-ls" class="warning" style="display:none">
 		<h2>Warning!</h2>
-		<p>We don't save your work for you! You'll need to regularly copy and paste your text into a word processor or other application to save it permanently.</p>
+		<p>We don&apos;t save your work for you! You&apos;ll need to regularly copy and paste your text into a word processor or other application to save it permanently.</p>
     <p>If you want your work saved, get a modern browser like <a href="https://www.google.com/chrome/">Chrome</a>, <a href="http://www.apple.com/safari/">Safari</a>,
       <a href="http://www.mozilla.org/firefox/">Firefox</a> or <a href="http://www.opera.com/">Opera</a>.</p>
+		<p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
+  </div>
+  <div id="warning-ls" class="warning" style="display:none">
+		<h2>Warning!</h2>
+		<p>Don&apos;t worry about losing your work &mdash; it&apos;s saved locally in your browser. Thanks for using a modern browser, by the way :-)</p>
 		<p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
 	</div>
 	<div id="kittenCredit"></div>
