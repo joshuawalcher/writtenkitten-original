@@ -1,7 +1,6 @@
-ABOUT
-------------------------------------------------------------------------------
+# ABOUT
 
-This is the source code for http://writtenkitten.net/, provided for the
+This is the source code for <http://writtenkitten.net/>, provided for the
 interest of anyone who'd like to know how it works, or adapt it for their own
 use.
 
@@ -11,8 +10,7 @@ awesome me might consider it.
 
 -- Skud and Emily
 
-LICENSE
-------------------------------------------------------------------------------
+# LICENSE
 
 Copyright (c) 2011 Alex "Skud" Bayley and Emily Turner
 All rights reserved.
