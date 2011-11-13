@@ -154,7 +154,7 @@ function word_count(text, wc) {
     var words = text.split(" ");
     wc.value = words.length;
 	current_word_count = wc.value = words.length;
-	current_word_count = document.getElementById('displayWords').innerHTML = words.length;
+	current_word_count = $("#displayWords").html(words.length);
 	kittens_earned = current_word_count / words_for_reward;
 	if (kittens_earned >= kittens_shown+1) {
 		show_kitten();
@@ -162,14 +162,14 @@ function word_count(text, wc) {
 }
 
 function show_warning() {
-	$("#warning").fadeIn('slow');
+	$("#warning").fadeIn("slow");
 }
 
 function hide_warning(immediate) {
 	if (immediate == true) {
 		$("#warning").hide();
 	} else {
-		$("#warning").fadeOut('slow');
+		$("#warning").fadeOut("slow");
 	}
 	warning_shown = true;
 }
@@ -177,16 +177,16 @@ function hide_warning(immediate) {
 function show_kitten() {
 	hide_warning("immediate");
 	kittens_shown++;
-	document.getElementById('kittenFrame').style.backgroundImage = "url(" + next_kitten.img_url + ")";
-	document.getElementById('kittenCredit').innerHTML = "<a href='" + next_kitten.page_url + "'>" + next_kitten.alt + "</a>";
+	$("#kittenFrame").style("background-image", "url(" + next_kitten.img_url + ")");
+	$("#kittenCredit").html("<a href='" + next_kitten.page_url + "'>" + next_kitten.alt + "</a>");
 	fetch_next_kitten();
 }
 
 function fetch_next_kitten() {
 	if (tmp = getParameterByName("search")) {
 		search = tmp;
-		document.getElementById("titleKitten").innerHTML = "<strike>Kitten!</strike>";
-		document.getElementById("titleSearch").innerHTML = "&nbsp;" + search + "!";
+		$("#titleKitten").html("<strike>Kitten!</strike>");
+		$("#titleSearch").html("&nbsp);" + search + "!");
 	} else {
 		search = "kitten,cute"
 	}
@@ -202,7 +202,7 @@ function fetch_next_kitten() {
 			next_kitten.img_url = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_z.jpg";
 			next_kitten.page_url = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
 			next_kitten.alt = photo.title + " by " + photo.ownername + " (under CC-BY)";
-			document.getElementById('nextKitten').src = next_kitten.img_url;
+			$("#nextKitten").attr("src", next_kitten.img_url);
 		}
 	});
 }
@@ -246,7 +246,6 @@ function getParameterByName(name) {
 	<textarea id="writearea" cols="80" rows="30" onKeyUp="word_count(this.value, hidden_count)"></textarea>
 </form>
 <form class="controls">
-  
 	<span class="meta">
 	  Fresh kitten every <select id="howmany" onChange="change_reward(this.value)">
 		<option value="100">100</option>
@@ -281,14 +280,11 @@ Enjoy!
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-26983491-1']);
   _gaq.push(['_trackPageview']);
-
   (function() {
     var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 </script>
-
-
 </body>
 </html>
