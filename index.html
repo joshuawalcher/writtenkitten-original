@@ -170,19 +170,18 @@ function show_kitten() {
 }
 
 function fetch_next_kitten() {
-  if (tmp = getParameterByName("search")) {
-    search = tmp;
+  if (search = getParameterByName("search")) {
     $("#titleKitten").html("<strike>Kitten!</strike>");
     $("#titleSearch").html("&nbsp;" + search + "!");
   } else {
     search = "kitten,cute";
   }
 
-  var flickr_url = "http://api.flickr.com/services/rest/?format=json&sort=interestingness-desc&method=flickr.photos.search&license=4&extras=owner_name&tags=" + search + "&tag_mode=all&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
+  var flickr_url = "http://api.flickr.com/services/rest/?format=json&sort=interestingness-desc&method=flickr.photos.search&license=4&extras=owner_name&tags=" + escape(search) + "&tag_mode=all&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
 
   $.getJSON(flickr_url, function(data) {
     if (data.stat == "ok") {
-      var i = Math.ceil(Math.random() * 100);
+      var i = Math.ceil(Math.random() * data.photos.photo.length);
       var photo = data.photos.photo[i];
       next_kitten.img_url = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_z.jpg";
       next_kitten.page_url = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
