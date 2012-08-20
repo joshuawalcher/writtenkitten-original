@@ -116,10 +116,20 @@ textarea { width:500px }
 
 <script>
 var current_word_count = 0;
-var words_for_reward = 100;
+var words_for_rewrd = 100;
 var kittens_earned = 0;
 var kittens_shown = 0;
 var warning_shown = false;
+var license_list="1,2,3,4,5,6,7"; 
+/*
+4 - Attribution License (http://creativecommons.org/licenses/by/2.0/)
+6 - Attribution-NoDerivs License (http://creativecommons.org/licenses/by-nd/2.0/)
+3 - Attribution-NonCommercial-NoDerivs License (http://creativecommons.org/licenses/by-nc-nd/2.0/)
+2 - Attribution-NonCommercial License (http://creativecommons.org/licenses/by-nc/2.0/)
+1 - Attribution-NonCommercial-ShareAlike License (http://creativecommons.org/licenses/by-nc-sa/2.0/)
+5 - Attribution-ShareAlike License (http://creativecommons.org/licenses/by-sa/2.0/)
+7 - No known copyright restrictions (http://flickr.com/commons/usage/)
+*/
 var warning;
 if (typeof localStorage == "undefined") warning = "#warning-no-ls"
 else warning = "#warning-ls";
@@ -170,6 +180,8 @@ function show_kitten() {
 }
 
 function fetch_next_kitten() {
+  if (search = getParameterByName("butiwouldratherbereading")) {
+  }
   if (search = getParameterByName("search")) {
     $("#titleKitten").html("<strike>Kitten!</strike>");
     $("#titleSearch").html("&nbsp;" + search + "!");
@@ -177,7 +189,8 @@ function fetch_next_kitten() {
     search = "kitten,cute";
   }
 
-  var flickr_url = "http://api.flickr.com/services/rest/?format=json&sort=interestingness-desc&method=flickr.photos.search&license=4&extras=owner_name&tags=" + escape(search) + "&tag_mode=all&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
+  var license_list 
+  var flickr_url = "http://api.flickr.com/services/rest/?format=json&sort=interestingness-desc&method=flickr.photos.search&license=" + license_list + "&extras=owner_name&tags=" + escape(search) + "&tag_mode=all&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
 
   $.getJSON(flickr_url, function(data) {
     if (data.stat == "ok") {
