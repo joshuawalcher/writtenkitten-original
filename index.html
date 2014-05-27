@@ -16,7 +16,8 @@ body {  background: url(kittenbg.gif) repeat #6AAFDA }
   background: #6AAFDA;
   color: #fff;
 }
-.wrapper {
+
+#main {
   margin: 50px auto;
   background-color: #fff;
   width: 1000px;
@@ -29,6 +30,21 @@ body {  background: url(kittenbg.gif) repeat #6AAFDA }
   -moz-box-shadow: 0px 0px 5px 2px #5896bc;
   box-shadow: 0px 0px 5px 2px #5896bc;
 }
+
+#about {
+  margin: 50px auto;
+  background-color: #fff;
+  width: 1000px;
+  padding: 1em 2em 2em 2em;
+  border: 1px solid #5896bc;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  -webkit-box-shadow: 0px 0px 5px 2px #5896bc;
+  -moz-box-shadow: 0px 0px 5px 2px #5896bc;
+  box-shadow: 0px 0px 5px 2px #5896bc;
+}
+
 img {
   border: 0;
   -ms-interpolation-mode: bicubic;
@@ -59,7 +75,7 @@ a:hover {  color: #305c78 }
 a:focus {  outline: thin dotted; }
 a:hover, a:active {  outline: 0; }
 p {  font-size: .9em }
-h1, .controls, h2, .hide {
+h1, #controls, h2, .hide {
   font-family: 'Indie Flower', cursive;
   font-weight: normal;
 }
@@ -105,7 +121,6 @@ h1, .controls, h2, .hide {
   margin-top: 420px;
   text-align: right;
 }
-#about {  margin: 0 2em }
 </style>
 
 <!--[if IE ]>
@@ -120,6 +135,7 @@ var words_for_reward = 100;
 var kittens_earned = 0;
 var kittens_shown = 0;
 var warning_shown = false;
+var search_for = 'kitten';
 var warning;
 if (typeof localStorage == "undefined") warning = "#warning-no-ls"
 else warning = "#warning-ls";
@@ -161,7 +177,6 @@ function hide_warning(immediate) {
 }
 
 function show_kitten() {
-//  console.log("show");
   hide_warning(true);
   kittens_shown++;
   $("#kittenFrame").css("background-image", "url(" + next_kitten.img_url + ")");
@@ -170,20 +185,22 @@ function show_kitten() {
 }
 
 function fetch_next_kitten() {
-  if (tmp = getParameterByName("search")) {
-    search = tmp;
-    search = search.replace(/</g, "&lt;").replace(/>/g, "&gt;"); // sanitize
-    $("#titleKitten").html("<strike>Kitten!</strike>");
-    $("#titleSearch").html("&nbsp;" + search + "!");
+  if (getParameterByName("search")) {
+    // if they are using a URL param, take them very literally. They
+    // generally know what they're doing.
+    flickr_search_term = search_for;
   } else {
-    search = "kitten,cute";
+    // add "cute" to search if item is selected from dropdown. it just
+    // works better that way.
+    flickr_search_term = search_for + ",cute";
   }
 
-  var flickr_url = "http://api.flickr.com/services/rest/?format=json&sort=interestingness-desc&method=flickr.photos.search&license=4&extras=owner_name&tags=" + search + "&tag_mode=all&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
+  var flickr_url =
+    "http://api.flickr.com/services/rest/?format=json&sort=interestingness-desc&method=flickr.photos.search&license=4&extras=owner_name&tags=" + flickr_search_term + "&tag_mode=all&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
 
   $.getJSON(flickr_url, function(data) {
     if (data.stat == "ok") {
-      var i = Math.ceil(Math.random() * 100);
+      var i = Math.ceil(Math.random() * data.photos.photo.length);
       var photo = data.photos.photo[i];
       next_kitten.img_url = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_z.jpg";
       next_kitten.page_url = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
@@ -193,13 +210,27 @@ function fetch_next_kitten() {
   });
 }
 
-function change_reward(howmany) {
-//  console.log("rewarding every " + howmany);
-    words_for_reward = howmany;
-    kittens_earned = current_word_count / howmany;
-    kittens_shown = parseInt(kittens_earned);
-//  console.log("kittens_earned = " + kittens_earned);
-//  console.log("kittens_shown = " + kittens_shown);
+function set_reward(howmany) {
+  words_for_reward = howmany;
+  kittens_earned = current_word_count / howmany;
+  kittens_shown = parseInt(kittens_earned);
+}
+
+function set_search(search) {
+  if (tmp = getParameterByName("search")) {
+    tmp.replace(/</g, "&lt;").replace(/>/g, "&gt;"); // sanitize
+    search_for = tmp;
+  } else {
+    search_for = search;
+  }
+  set_title();
+}
+
+function set_title() {
+  if (search_for != "kitten") {
+    $("#titleKitten").html("<strike>Kitten!</strike>");
+    $("#titleSearch").html("&nbsp;" + search_for + "!");
+  }
 }
 
 function getParameterByName(name) {
@@ -218,67 +249,87 @@ function restore_text() {
 }
 </script>
 </head>
-<body onLoad="fetch_next_kitten(); restore_text()">
-<div class="wrapper">
+<body onLoad="set_search($('#search').val()); set_title(); restore_text()">
+<div id="main">
 <a name="top"></a>
 <h1>Written? <span id="titleKitten">Kitten!</span><span id="titleSearch"></span></h1>
 <div id="kittenFrame">
-	<div id="warning-no-ls" class="warning" style="display:none">
-		<h2>Warning!</h2>
-		<p>We don&apos;t save your work for you! You&apos;ll need to regularly copy 
+  <div id="warning-no-ls" class="warning" style="display:none">
+    <h2>Warning!</h2>
+    <p>We don&apos;t save your work for you! You&apos;ll need to regularly copy 
         and paste your text into a word processor or other application to save it permanently.</p>
     <p>If you want your work saved even if you close your browser,
     upgrade to a recent version of <a href="https://www.google.com/chrome/">Chrome</a>, 
       <a href="http://www.mozilla.org/firefox/">Firefox</a>, <a href="http://www.apple.com/safari/">Safari</a> 
       or <a href="http://www.opera.com/">Opera</a>.</p>
-		<p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
+    <p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
   </div>
   <div id="warning-ls" class="warning" style="display:none">
-		<h2>Hey!</h2>
-		<p>Looks like your browser supports local storage.  That's great!  
+    <h2>Hey!</h2>
+    <p>Looks like your browser supports local storage.  That's great!
         Your writing will be saved even if you close this page.</p>
     <p>We can't take responsibility for things going wrong, though, so you might want to 
     copy and paste your work to an external document every so often, just in case.</p>
-		<p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
-	</div>
-	<div id="kittenCredit"></div>
+    <p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
+  </div>
+  <div id="kittenCredit"></div>
 </div>
 
 <form>
-	<input type="hidden" name="hidden_count" value="" disabled  />
-	<textarea id="writearea" cols="80" rows="30" onKeyUp="word_count(this.value, hidden_count)"></textarea>
+  <input type="hidden" name="hidden_count" value="" disabled  />
+  <textarea id="writearea" cols="80" rows="30" onKeyUp="word_count(this.value, hidden_count)"></textarea>
 </form>
-<form class="controls">
-	<span class="meta">
-	  Fresh kitten every <select id="howmany" onChange="change_reward(this.value)">
-		<option value="100">100</option>
-		<option value="200">200</option>
-		<option value="500">500</option>
-		<option value="1000">1000</option>
-		</select> words
-	</span>
-	<span class="meta">
-	Current word count: <span id="displayWords">0</span>
-	</span>
-	<span class="meta">
-	  <a href="#" onClick="$('#about').slideDown()">About</a>
-	</span>
+<form id="controls">
+  <span class="meta">
+    Fresh
+    <select id="search" onChange="set_search(this.value)">
+    <option value="kitten">kitten</option>
+    <option value="puppy">puppy</option>
+    <option value="bunny">bunny</option>
+    <option value="otter">otter</option>
+    <option value="cupcake">cupcake</option>
+    </select>
+    every 
+    <select id="howmany" onChange="set_reward(this.value)">
+    <option value="100">100</option>
+    <option value="200">200</option>
+    <option value="500">500</option>
+    <option value="1000">1000</option>
+    </select> words
+  </span>
+  <span class="meta">
+  Current word count: <span id="displayWords">0</span>
+  </span>
 </form>
+</div> <!-- main -->
 
-<div id="about" style="display:none">
-	<h2>About</h2>
+<div id="about">
+  <h2>About</h2>
   <p>
-Written Kitten was created by <a href="http://twitter.com/Skud" rel="author">Skud</a>, <a href="http://twitter.com/aquaprofundanet" rel="author">Emily</a> and <a href="https://github.com/Skud/writtenkitten/contributors" rel="author">contributors</a>.
+  Written Kitten was created by <a href="http://twitter.com/Skud" rel="author">Skud</a>, <a href="http://twitter.com/aquaprofundanet" rel="author">Emily</a> and <a href="https://github.com/Skud/writtenkitten/contributors" rel="author">contributors</a>.
 We like positive reinforcement, so we decided to make something a bit like <a href="http://writeordie.com">writeordie</a> but
 cuter and fuzzier.
+  </p>
+  <p>
+  Images are randomly selected from Flickr&apos;s &ldquo;most
+  interesting&rdquo; photos tagged with the search term of your
+  choice.  You can specify your own search term by editing the URL in
+  your browser's location bar <a
+  href="http://writtenkitten.net/?search=dinosaur">like this</a>.
+  </p>
+  <p>
+  Written? Kitten! is <a
+  href="http://github.com/Skud/writtenkitten">open source</a> and we're
+  happy to accept improvements, bugfixes, or suggestions.  If you
+  appreciate our work, please support the developers via <a
+  href="https://www.gittip.com/Skud/">Gittip</a>.
+  </p>
+  <p>
+  Enjoy!
+  </p>
+  <img src="" id="nextKitten"/>
+</div> <!-- about -->
 
-Images are randomly selected from Flickr&apos;s &ldquo;most interesting&rdquo; photos matching the tags &ldquo;kitten&rdquo; and &ldquo;cute&rdquo;.
-
-Enjoy!
-	</p>
-	<p><a href="#" class="hide" onClick="$('#about').slideUp()">Hide</a></p>
-	<img src="" id="nextKitten"/>
-</div>
 <script>
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-26983491-1']);
