@@ -136,6 +136,14 @@ var kittens_earned = 0;
 var kittens_shown = 0;
 var warning_shown = false;
 var search_for = 'kitten';
+
+var valid_licenses="4,5,7";
+/*
+4 - Attribution License (http://creativecommons.org/licenses/by/2.0/)
+5 - Attribution-ShareAlike License (http://creativecommons.org/licenses/by-sa/2.0/)
+7 - No known copyright restrictions (http://flickr.com/commons/usage/)
+*/
+
 var warning;
 if (typeof localStorage == "undefined") warning = "#warning-no-ls"
 else warning = "#warning-ls";
@@ -145,6 +153,28 @@ var next_kitten = {
   page_url: '',
   alt: ''
 };
+
+//Get license info
+var license_url = "http://api.flickr.com/services/rest/?format=json&method=flickr.photos.licenses.getInfo&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
+var custom_shorts = {"No known copyright restrictions": "Flickr Commons"};
+var license_list = [];
+$.getJSON(license_url, function(data) {
+  if (data.stat == "ok") {
+    $.each(data.licenses.license,function(idx,el) {
+      licdata = {"name": el.name,"url": el.url};
+      //Assign short
+      if(shortcc = licdata.url.match(/creativecommons\.org\/licenses\/([^\/]+)\//)) {
+        licdata["shortname"] = 'CC-' + shortcc[1].toUpperCase();
+      } else if(custshort = custom_shorts[licdata.name]) {
+        licdata["shortname"] = custshort;
+      } else {
+        licdata["shortname"] = licdata.name;
+      }
+
+      license_list[el.id] = licdata;
+    });
+  }
+});
 
 function word_count(text, wc) {
   if (typeof localStorage != "undefined") localStorage.text = text;
@@ -196,15 +226,23 @@ function fetch_next_kitten() {
   }
 
   var flickr_url =
-    "http://api.flickr.com/services/rest/?format=json&sort=interestingness-desc&method=flickr.photos.search&license=4&extras=owner_name&tags=" + flickr_search_term + "&tag_mode=all&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
+    "http://api.flickr.com/services/rest/?format=json&sort=interestingness-desc&method=flickr.photos.search&license=" + valid_licenses + "&extras=owner_name,license&tags=" + flickr_search_term + "&tag_mode=all&api_key=5dfc80756edad8d0566cf40f0909324e&jsoncallback=?";
 
   $.getJSON(flickr_url, function(data) {
     if (data.stat == "ok") {
       var i = Math.ceil(Math.random() * data.photos.photo.length);
       var photo = data.photos.photo[i];
+      var attrib = "";
+      if (license = license_list[photo.license]) {
+        if (license.url) {
+          attrib = " (<a href=\"" + license.url + "\">" + license.shortname + "</a>)";
+        } else {
+          attrib = " (" + license.shortname + ")";
+        }
+      }
       next_kitten.img_url = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_z.jpg";
       next_kitten.page_url = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
-      next_kitten.alt = photo.title + " by " + photo.ownername + " (under CC-BY)";
+      next_kitten.alt = photo.title + " by " + photo.ownername + attrib;
       $("#nextKitten").attr("src", next_kitten.img_url);
     }
   });
