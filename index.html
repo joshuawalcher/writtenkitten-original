@@ -286,18 +286,18 @@ function restore_text() {
 }
 </script>
 </head>
-<body onLoad="set_search($('#search').val()); set_title(); restore_text()">
+<body onLoad="set_search($('#search').val()); set_title(); restore_text(); fetch_next_kitten();">
 <div id="main">
 <a name="top"></a>
 <h1>Written? <span id="titleKitten">Kitten!</span><span id="titleSearch"></span></h1>
 <div id="kittenFrame">
   <div id="warning-no-ls" class="warning" style="display:none">
     <h2>Warning!</h2>
-    <p>We don&apos;t save your work for you! You&apos;ll need to regularly copy 
+    <p>We don&apos;t save your work for you! You&apos;ll need to regularly copy
         and paste your text into a word processor or other application to save it permanently.</p>
     <p>If you want your work saved even if you close your browser,
-    upgrade to a recent version of <a href="https://www.google.com/chrome/">Chrome</a>, 
-      <a href="http://www.mozilla.org/firefox/">Firefox</a>, <a href="http://www.apple.com/safari/">Safari</a> 
+    upgrade to a recent version of <a href="https://www.google.com/chrome/">Chrome</a>,
+      <a href="http://www.mozilla.org/firefox/">Firefox</a>, <a href="http://www.apple.com/safari/">Safari</a>
       or <a href="http://www.opera.com/">Opera</a>.</p>
     <p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
   </div>
@@ -305,7 +305,7 @@ function restore_text() {
     <h2>Hey!</h2>
     <p>Looks like your browser supports local storage.  That's great!
         Your writing will be saved even if you close this page.</p>
-    <p>We can't take responsibility for things going wrong, though, so you might want to 
+    <p>We can't take responsibility for things going wrong, though, so you might want to
     copy and paste your work to an external document every so often, just in case.</p>
     <p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
   </div>
