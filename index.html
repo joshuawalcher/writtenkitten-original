@@ -121,6 +121,19 @@ h1, #controls, h2, .hide {
   margin-top: 420px;
   text-align: right;
 }
+
+#search input {
+  border-radius:5px;
+  border:1px solid #999;
+  background-color:transparent;
+  padding:0.5em;
+  outline:0;
+}
+
+#search input:focus {
+  border-color:#6AAFDA;
+}
+
 </style>
 
 <!--[if IE ]>
@@ -284,6 +297,43 @@ function getParameterByName(name) {
 function restore_text() {
   if (typeof localStorage != "undefined") $("#writearea").attr("value", localStorage.text).keyup();
 }
+
+function set_url(paramName, paramValue)
+{
+    var url = window.location.href;
+
+    //store anchor
+    var anchor = url.substr(url.indexOf('#'));
+    //remove anchor
+    url = url.substr(0, url.indexOf('#'));
+
+    if (url.indexOf(paramName + "=") >= 0)
+    {
+      var prefix = url.substring(0, url.indexOf(paramName));
+      var suffix = url.substring(url.indexOf(paramName));
+      suffix = suffix.substring(suffix.indexOf("=") + 1);
+      suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+      url = prefix + paramName + "=" + paramValue + suffix;
+    }
+    else
+    {
+      if (url.indexOf("?") < 0)
+          url += "?" + paramName + "=" + paramValue;
+      else
+          url += "&" + paramName + "=" + paramValue;
+    }
+    //add anchor back
+    url += anchor;
+
+    window.location.href = url;
+}
+
+function submit_search() {
+  var search = $('input[name=search]').val();
+  if(search)
+    set_url('search', search);
+}
+
 </script>
 </head>
 <body onLoad="set_search($('#search').val()); set_title(); restore_text()">
@@ -293,11 +343,11 @@ function restore_text() {
 <div id="kittenFrame">
   <div id="warning-no-ls" class="warning" style="display:none">
     <h2>Warning!</h2>
-    <p>We don&apos;t save your work for you! You&apos;ll need to regularly copy 
+    <p>We don&apos;t save your work for you! You&apos;ll need to regularly copy
         and paste your text into a word processor or other application to save it permanently.</p>
     <p>If you want your work saved even if you close your browser,
-    upgrade to a recent version of <a href="https://www.google.com/chrome/">Chrome</a>, 
-      <a href="http://www.mozilla.org/firefox/">Firefox</a>, <a href="http://www.apple.com/safari/">Safari</a> 
+    upgrade to a recent version of <a href="https://www.google.com/chrome/">Chrome</a>,
+      <a href="http://www.mozilla.org/firefox/">Firefox</a>, <a href="http://www.apple.com/safari/">Safari</a>
       or <a href="http://www.opera.com/">Opera</a>.</p>
     <p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
   </div>
@@ -305,7 +355,7 @@ function restore_text() {
     <h2>Hey!</h2>
     <p>Looks like your browser supports local storage.  That's great!
         Your writing will be saved even if you close this page.</p>
-    <p>We can't take responsibility for things going wrong, though, so you might want to 
+    <p>We can't take responsibility for things going wrong, though, so you might want to
     copy and paste your work to an external document every so often, just in case.</p>
     <p class="hidelink"><a href="#" class="hide" onClick="hide_warning()">OK, got it!</a></p>
   </div>
@@ -351,10 +401,12 @@ cuter and fuzzier.
   <p>
   Images are randomly selected from Flickr&apos;s &ldquo;most
   interesting&rdquo; photos tagged with the search term of your
-  choice.  You can specify your own search term by editing the URL in
-  your browser's location bar <a
-  href="http://writtenkitten.net/?search=dinosaur">like this</a>.
+  choice. You can specify your own search term here:
   </p>
+  <form id="search">
+      <input type="text" name="search" placeholder="e.g. dinosoar"/>
+      <input type="button" onclick="submit_search()" value="Search"/>
+  </form>
   <p>
   Written? Kitten! is <a
   href="http://github.com/Skud/writtenkitten">open source</a> and we're
