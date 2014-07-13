@@ -284,6 +284,29 @@ function getParameterByName(name) {
 function restore_text() {
   if (typeof localStorage != "undefined") $("#writearea").attr("value", localStorage.text).keyup();
 }
+
+function tabs(e) {
+  if(e.keyCode === 9) { // if tab
+      var el = e.target;
+
+      // get caret position or selection
+      var start = el.selectionStart;
+      var end = el.selectionEnd;
+
+      var value = el.value;
+
+      // set text to: text before caret + tab + text after caret
+      el.valuse = value.substring(0, start
+                  + "\t"
+                  + value.substring(end));
+
+      // reset caret position
+      el.selectionStart = el.selectionEnd = start + 1;
+
+      // keep focus
+      e.preventDefault();
+  }
+}
 </script>
 </head>
 <body onLoad="set_search($('#search').val()); set_title(); restore_text(); fetch_next_kitten();">
@@ -314,7 +337,7 @@ function restore_text() {
 
 <form>
   <input type="hidden" name="hidden_count" value="" disabled  />
-  <textarea id="writearea" cols="80" rows="30" onKeyUp="word_count(this.value, hidden_count)"></textarea>
+  <textarea id="writearea" cols="80" rows="30" onKeyDown= "tabs(event);" onKeyUp="word_count(this.value, hidden_count);"></textarea>
 </form>
 <form id="controls">
   <span class="meta">
