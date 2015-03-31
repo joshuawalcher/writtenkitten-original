@@ -188,7 +188,7 @@ function word_count(text, wc) {
   current_word_count = wc.value = words.length;
   $("#displayWords").html(wc.value);
   kittens_earned = current_word_count / words_for_reward;
-  if (kittens_earned >= kittens_shown+1) {
+  if (kittens_earned >= kittens_shown) {
     show_kitten();
   }
 }
