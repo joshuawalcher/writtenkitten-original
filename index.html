@@ -181,6 +181,8 @@ function word_count(text, wc) {
   if (current_word_count >= 10 && warning_shown == false) {
     show_warning();
   }
+  // replace each Chinese character with a new English word " hanzi "
+  text = text.replace(/[\u4e00-\u9fa5]/g, " hanzi "); 
   text = text.replace(/^\s*|\s*$/g,''); //removes whitespace from front and end
   text = text.replace(/\s+/g,' '); // collapse multiple consecutive spaces
   var words = text.split(" ");
