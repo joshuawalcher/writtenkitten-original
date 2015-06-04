@@ -140,6 +140,7 @@ var kittens_earned = 0;
 var kittens_shown = 0;
 var warning_shown = false;
 var search_for = 'kitten';
+var last_word_count = 0;
 
 var valid_licenses="4,5,7";
 /*
@@ -191,8 +192,15 @@ function word_count(text, wc) {
   text = text.replace(/\s+/g,' '); // collapse multiple consecutive spaces
   var words = text.split(" ");
   wc.value = words.length;
-  current_word_count = wc.value = words.length;
-  $("#displayWords").html(wc.value);
+  var current_word_number = words.length
+  
+  if (last_word_count < current_word_number) {
+    // cumulate word counts
+    current_word_count = current_word_count + current_word_number - last_word_count;
+  }
+  last_word_count = current_word_number // update last_word_count
+  
+  $("#displayWords").html(wc.value + "/" + current_word_count);
   kittens_earned = current_word_count / words_for_reward;
   if (kittens_earned >= kittens_shown) {
     show_kitten();
