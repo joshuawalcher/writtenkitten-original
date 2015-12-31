@@ -253,7 +253,7 @@ function fetch_next_kitten() {
           attrib = " (" + license.shortname + ")";
         }
       }
-      next_kitten.img_url = "http://farm" + photo.farm + ".static.flickr.com/" + photo.server + "/" + photo.id + "_" + photo.secret + "_z.jpg";
+      next_kitten.img_url = "http://c1.staticflickr.com/" + photo.farm + "/" + photo.server + "/" + photo.id + "_" + photo.secret + "_z.jpg";
       next_kitten.page_url = "http://www.flickr.com/photos/" + photo.owner + "/" + photo.id;
       next_kitten.alt = photo.title + " by " + photo.ownername + attrib;
       $("#nextKitten").attr("src", next_kitten.img_url);
