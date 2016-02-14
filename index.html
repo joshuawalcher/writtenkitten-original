@@ -1,12 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Written? Kitten!</title>
+<title>Markdown - Written? Kitten!</title>
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <link rel="shortcut icon" href="https://cdn1.iconfinder.com/data/icons/glaze/128x128/mimetypes/gf.png" type="image/png">
 <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/glaze/128x128/mimetypes/gf.png" type="image/png">
 <link href="http://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="css/editormd.css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 <style type="text/css">
 body {  background: url(kittenbg.gif) repeat #6AAFDA }
@@ -20,10 +21,11 @@ body {  background: url(kittenbg.gif) repeat #6AAFDA }
 }
 
 #main {
-  margin: 50px auto;
+
+  margin: 1px auto;
   background-color: #fff;
-  width: 1000px;
-  padding: 1em 2em 2em 2em;
+  width: 1200px;
+  padding: 1em 2em 2em 2em; 
   border: 1px solid #5896bc;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
@@ -31,10 +33,11 @@ body {  background: url(kittenbg.gif) repeat #6AAFDA }
   -webkit-box-shadow: 0px 0px 5px 2px #5896bc;
   -moz-box-shadow: 0px 0px 5px 2px #5896bc;
   box-shadow: 0px 0px 5px 2px #5896bc;
+
 }
 
 #about {
-  margin: 50px auto;
+  margin: 10px auto;
   background-color: #fff;
   width: 1000px;
   padding: 1em 2em 2em 2em;
@@ -112,12 +115,13 @@ h1, #controls, h2, .hide {
 .meta {  padding-left: 2em }
 #kittenFrame {
   float: right;
-  height: 400px;
-  width: 400px;
+  height: 300px;
+  width: 300px;
   background-position: center;
   background-repeat: no-repeat;
 }
-#nextKitten {  display: none }
+#nextKitten {  display: none}
+
 #kittenCredit {
   color: #999;
   width: 100%;
@@ -299,6 +303,7 @@ function restore_text() {
   if (typeof localStorage != "undefined") $("#writearea").attr("value", localStorage.text).keyup();
 }
 
+
 function tabs(e) {
   if(e.keyCode === 9) { // if tab
       var el = e.target;
@@ -321,12 +326,22 @@ function tabs(e) {
       e.preventDefault();
   }
 }
+
+function change_editor_font_size(sz) {
+	$(".CodeMirror pre").css("font-size", sz + "pt")
+	$(".editormd-preview p").css("font-size",sz + "pt")
+}
+
+function word_count_markdown_editor() {
+   word_count(testEditor.getValue(), document.getElementsByName("hidden_count"))
+   
+}
 </script>
 </head>
-<body onLoad="set_search($('#search').val()); set_title(); restore_text(); set_tabs();">
+<body onLoad="set_search($('#search').val()); set_title(); restore_text();">
 <div id="main">
 <a name="top"></a>
-<h1>Written? <span id="titleKitten">Kitten!</span><span id="titleSearch"></span></h1>
+<h1>Markdown - Written? <span id="titleKitten">Kitten!</span><span id="titleSearch"></span></h1>
 <div id="kittenFrame">
   <div id="warning-no-ls" class="warning" style="display:none">
     <h2>Warning!</h2>
@@ -349,9 +364,12 @@ function tabs(e) {
   <div id="kittenCredit"></div>
 </div>
 
-<form>
+<form style="horizontal-align:left">
   <input type="hidden" name="hidden_count" value="" disabled  />
-  <textarea id="writearea" cols="80" rows="30" onKeyDown= "tabs(event);" onKeyUp="word_count(this.value, hidden_count);"></textarea>
+
+  <div id="markdown-editor">
+                <textarea style="display:none;"></textarea>
+  </div>
 </form>
 <form id="controls">
   <span class="meta">
@@ -368,10 +386,21 @@ function tabs(e) {
     <option value="500">500</option>
     <option value="1000">1000</option>
     </select> words
+     with editor theme
+    <select id="editor-area-theme-select">
+                        <option selected="selected" value="">select editor area themes</option>
+    </select>
+<!--
+ Editor font size <input name="editor-font-size-input" style="width:2em" value="12" onChange="change_editor_font_size(this.value)"></input>pt -->
   </span>
+
   <span class="meta">
   Current word count: <span id="displayWords">0</span>
-  </span>
+  </span> 
+<p>
+<span>
+    
+</span> </p>
 </form>
 </div> <!-- main -->
 
@@ -384,6 +413,9 @@ function tabs(e) {
   href="https://github.com/Skud/writtenkitten/blob/master/CONTRIBUTORS.md">contributors</a>.
 We like positive reinforcement, so we decided to make something a bit like <a href="http://writeordie.com">writeordie</a> but
 cuter and fuzzier.
+  </p>
+  <p>
+  Zhaokang modifies the origin Written?Kitten! to support Chinese and use a markdown editor `Editor.md" as the default editor. 
   </p>
   <p>
   Images are randomly selected from Flickr&apos;s &ldquo;most
@@ -405,6 +437,79 @@ cuter and fuzzier.
   <img src="" id="nextKitten"/>
 </div> <!-- about -->
 
+
+<script src="js/jquery.min.js"></script>
+<script src="editormd.js"></script>
+<script type="text/javascript">
+	var testEditor;
+	
+
+	function themeSelect(id, themes, lsKey, callback)
+            {
+                var select = $("#" + id);
+                
+                for (var i = 0, len = themes.length; i < len; i ++)
+                {                    
+                    var theme    = themes[i];
+                    var selected = (localStorage[lsKey] == theme) ? " selected=\"selected\"" : "";
+                    
+                    select.append("<option value=\"" + theme + "\"" + selected + ">" + theme + "</option>");
+                }
+                
+                select.bind("change", function(){
+                    var theme = $(this).val();
+                    
+                    if (theme === "")
+                    {
+                        alert("theme == \"\"");
+                        return false;
+                    }
+                    
+                    console.log("lsKey =>", lsKey, theme);
+                    
+                    localStorage[lsKey] = theme;
+                    callback(select, theme);
+                }); 
+                
+                return select;
+            }
+
+
+
+            $(function() {
+                testEditor = editormd("markdown-editor", {
+                    width   : "60%",
+                    height  : 320,
+                    syncScrolling : "single",
+                    path    : "lib/",
+		    onchange : function (){
+				word_count(this.getValue(), document.getElementsByName("hidden_count"))
+				},
+		    onload : function() {
+				// restore editor's content from local storage
+				this.setMarkdown(localStorage.text)
+				// update the word count info
+				word_count(this.getValue(), document.getElementsByName("hidden_count"))
+				// register the keyup action of the editor
+				$(".CodeMirror").keyup(word_count_markdown_editor);
+				// restore the theme
+				this.setCodeMirrorTheme(document.getElementById("editor-area-theme-select").value)
+				// set into the unwatch state of the markdown editor by default
+				$.proxy(testEditor.toolbarHandlers.watch, testEditor)()
+ 			 	}
+
+            	});
+		// generate the theme selection dropbox
+		themeSelect("editor-area-theme-select", editormd.editorThemes, "editorTheme", function($this, theme) {
+                    testEditor.setCodeMirrorTheme(theme); 
+                    // or testEditor.setEditorTheme(theme);
+                });
+		
+	});
+	 
+        </script>
+
+
 <script>
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-26983491-1']);
@@ -419,5 +524,10 @@ cuter and fuzzier.
   <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
   <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
 <![endif]-->
+
+
+
+
+
 </body>
 </html>
