@@ -6,9 +6,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <link rel="shortcut icon" href="https://cdn1.iconfinder.com/data/icons/glaze/128x128/mimetypes/gf.png" type="image/png">
 <link rel="icon" href="https://cdn1.iconfinder.com/data/icons/glaze/128x128/mimetypes/gf.png" type="image/png">
-<link href="http://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css" />
+<!-- <link href="http://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet" type="text/css" /> -->
 <link rel="stylesheet" href="css/editormd.css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+<script src="js/jquery.min.js"></script> 
 <style type="text/css">
 body {  background: url(kittenbg.gif) repeat #6AAFDA }
 ::-moz-selection {
@@ -115,12 +115,12 @@ h1, #controls, h2, .hide {
 .meta {  padding-left: 2em }
 #kittenFrame {
   float: right;
-  height: 300px;
-  width: 300px;
-  background-position: center;
-  background-repeat: no-repeat;
+  max-height: 400px;
+  max-width:400px;
+   min-height: 400px;
+  min-width: 400px;
 }
-#nextKitten {  display: none}
+#nextKitten {  display: block;}
 
 #kittenCredit {
   color: #999;
@@ -227,8 +227,9 @@ function hide_warning(immediate) {
 function show_kitten() {
   hide_warning(true);
   kittens_shown++;
-  $("#kittenFrame").css("background-image", "url(" + next_kitten.img_url + ")");
+  // $("#kittenFrame").css("background-image", "url(" + next_kitten.img_url + ")");
   $("#kittenCredit").html("<a href='" + next_kitten.page_url + "'>" + next_kitten.alt + "</a>");
+  $("#kittenImg").attr("src", next_kitten.img_url)
   fetch_next_kitten();
 }
 
@@ -343,6 +344,7 @@ function word_count_markdown_editor() {
 <a name="top"></a>
 <h1>Markdown - Written? <span id="titleKitten">Kitten!</span><span id="titleSearch"></span></h1>
 <div id="kittenFrame">
+    <img style="max-height:400px; max-width:400px;" id="kittenImg"></img>
   <div id="warning-no-ls" class="warning" style="display:none">
     <h2>Warning!</h2>
     <p>We don&apos;t save your work for you! You&apos;ll need to regularly copy
@@ -393,7 +395,7 @@ function word_count_markdown_editor() {
 <!--
  Editor font size <input name="editor-font-size-input" style="width:2em" value="12" onChange="change_editor_font_size(this.value)"></input>pt -->
   </span>
-
+ <br>
   <span class="meta">
   Current word count: <span id="displayWords">0</span>
   </span> 
