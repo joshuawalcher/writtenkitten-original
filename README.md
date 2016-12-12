@@ -2,7 +2,7 @@
 
 This is the source code for <http://writtenkitten.net/>, provided for the
 interest of anyone who'd like to know how it works, or adapt it for their own
-use.
+use. writtenkitten.net is now deprecated. The official Written? Kitten! is now at <http://writtenkitten.co/>.
 
 The website and the code are provided "as is" and we don't have any particular
 plans to support or improve them, though if you were to send us something 
