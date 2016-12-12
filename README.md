@@ -1,6 +1,6 @@
 # ABOUT
 
-This is the source code for <http://writtenkitten.net/>, provided for the
+This is the source code for writtenkitten.net, provided for the
 interest of anyone who'd like to know how it works, or adapt it for their own
 use. writtenkitten.net is now deprecated. The official Written? Kitten! is now at <http://writtenkitten.co/>.
 
