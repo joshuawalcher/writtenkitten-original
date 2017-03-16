@@ -1,8 +1,10 @@
 # ABOUT
 
-This is the source code for writtenkitten.net, provided for the
-interest of anyone who'd like to know how it works, or adapt it for their own
-use. writtenkitten.net is now deprecated. The official Written? Kitten! is now at <http://writtenkitten.co/>.
+The official Written? Kitten! is now at <http://writtenkitten.co/> and the official repository is at https://github.com/joshuawalcher/writtenkitten/.
+
+This is the source code for the deprecated website writtenkitten.net, provided for the
+interest of anyone who'd like to know how it worked, or to adapt it for their own
+use. writtenkitten.net is now deprecated. 
 
 The website and the code are provided "as is" and we don't have any particular
 plans to support or improve them, though if you were to send us something 
