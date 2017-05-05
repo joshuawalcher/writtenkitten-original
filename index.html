@@ -121,6 +121,19 @@ h1, #controls, h2, .hide {
   margin-top: 420px;
   text-align: right;
 }
+
+#search input {
+  border-radius:5px;
+  border:1px solid #999;
+  background-color:transparent;
+  padding:0.5em;
+  outline:0;
+}
+
+#search input:focus {
+  border-color:#6AAFDA;
+}
+
 </style>
 
 <!--[if IE ]>
@@ -307,6 +320,43 @@ function tabs(e) {
       e.preventDefault();
   }
 }
+
+function set_url(paramName, paramValue)
+{
+    var url = window.location.href;
+
+    //store anchor
+    var anchor = url.substr(url.indexOf('#'));
+    //remove anchor
+    url = url.substr(0, url.indexOf('#'));
+
+    if (url.indexOf(paramName + "=") >= 0)
+    {
+      var prefix = url.substring(0, url.indexOf(paramName));
+      var suffix = url.substring(url.indexOf(paramName));
+      suffix = suffix.substring(suffix.indexOf("=") + 1);
+      suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+      url = prefix + paramName + "=" + paramValue + suffix;
+    }
+    else
+    {
+      if (url.indexOf("?") < 0)
+          url += "?" + paramName + "=" + paramValue;
+      else
+          url += "&" + paramName + "=" + paramValue;
+    }
+    //add anchor back
+    url += anchor;
+
+    window.location.href = url;
+}
+
+function submit_search() {
+  var search = $('input[name=search]').val();
+  if(search)
+    set_url('search', search);
+}
+
 </script>
 </head>
 <body onLoad="set_search($('#search').val()); set_title(); restore_text(); set_tabs();">
@@ -374,10 +424,12 @@ cuter and fuzzier.
   <p>
   Images are randomly selected from Flickr&apos;s &ldquo;most
   interesting&rdquo; photos tagged with the search term of your
-  choice.  You can specify your own search term by editing the URL in
-  your browser's location bar <a
-  href="http://writtenkitten.net/?search=dinosaur">like this</a>.
+  choice. You can specify your own search term here:
   </p>
+  <form id="search">
+      <input type="text" name="search" placeholder="e.g. dinosoar"/>
+      <input type="button" onclick="submit_search()" value="Search"/>
+  </form>
   <p>
   Written? Kitten! is <a
   href="http://github.com/Skud/writtenkitten">open source</a> and we're
